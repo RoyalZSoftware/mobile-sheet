@@ -1,0 +1,22 @@
+{
+  "name": "@royalzsoftware/mobile-sheet",
+  "workspaces": [
+    "packages/mobile-sheet",
+    "packages/mobile-sheet.angular"
+  ],
+  "version": "0.1.0-alpha",
+  "description": "Mobile sheet implementation",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "tsc": "tsc"
+  },
+  "keywords": [
+    "sheet",
+    "mobile-sheet"
+  ],
+  "author": "Alexander Panov",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.4.4"
+  }
+}
