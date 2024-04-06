@@ -6,10 +6,6 @@
   ],
   "version": "0.1.0-alpha",
   "description": "Mobile sheet implementation",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "tsc": "tsc"
-  },
   "keywords": [
     "sheet",
     "mobile-sheet"
