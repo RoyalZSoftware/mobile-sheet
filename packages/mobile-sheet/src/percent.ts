@@ -12,6 +12,10 @@ export class Percent {
         return this.value * 100;
     }
 
+    public toString(): string {
+        return (this.value * 100) + "%";
+    }
+
     public minus(percent: Percent) {
         return new Percent(this.asPercent() - percent.asPercent());
     }
