@@ -4,12 +4,21 @@ import {
   Component,
   ContentChild,
   ElementRef,
-  NgZone,
+  Inject,
+  InjectionToken,
+  ViewEncapsulation,
 } from '@angular/core';
 import { Percent, Sheet } from '@royalzsoftware/mobile-sheet';
 import { ReplaySubject } from 'rxjs';
 import { map } from 'rxjs';
 import { Observable } from 'rxjs';
+
+export interface SheetConfiguration {
+  dockPoints: Percent[];
+  transitionSpeed?: number;
+}
+
+export const SHEET_CONFIGURATION = new InjectionToken<SheetConfiguration>('SHEET_CONFIGURATION');
 
 @Component({
   selector: 'mobile-sheet',
@@ -19,7 +28,7 @@ import { Observable } from 'rxjs';
     <div
       id="sheet"
       [style.transform]="this.sheetTransformProperty | async"
-      [style.transition]="(dragging$ | async) ? 'unset' : '0.2s all'"
+      [style.transition]="(dragging$ | async) ? 'unset' : transitionSpeed + 's all'"
       [style.height]="'calc(100vh - ' + this.handle?.nativeElement?.clientHeight + ')'"
     >
       <ng-content></ng-content>
@@ -35,23 +44,22 @@ import { Observable } from 'rxjs';
     transition: 0.2s all;
   }
   `,
+  encapsulation: ViewEncapsulation.None,
 })
 export class MobileSheetComponent implements AfterViewInit {
-  public sheet: Sheet;
-
-  protected newPosition = new Percent(57);
   @ContentChild('handle') handle?: ElementRef<HTMLElement>;
+
+  public sheet: Sheet;
 
   protected dragging$ = new ReplaySubject<boolean>(1);
 
   protected sheetTransformProperty: Observable<string>;
+  protected transitionSpeed: number = 0.2;
 
-  constructor(private _ngZone: NgZone) {
-    this.sheet = new Sheet([
-      new Percent(30),
-      new Percent(70),
-      new Percent(100),
-    ]);
+  constructor(@Inject(SHEET_CONFIGURATION) sheetConfiguration: SheetConfiguration) {
+    this.sheet = new Sheet(sheetConfiguration.dockPoints);
+    if (sheetConfiguration.transitionSpeed)
+      this.transitionSpeed = sheetConfiguration.transitionSpeed;
     this.sheetTransformProperty = this.sheet.position$.pipe(
       map((position: Percent) => {
         const invertedShare = new Percent(100 - position.asPercent());
